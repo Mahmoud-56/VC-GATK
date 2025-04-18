@@ -1,0 +1,2 @@
+Sample	picard_insertsizemetrics-summed_median	picard_insertsizemetrics-summed_mean
+SRR062634_sorted_dedup_bqsr_reads	183	179.373841

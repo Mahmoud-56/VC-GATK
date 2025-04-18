@@ -1,0 +1,2 @@
+Sample	Mean Read Length
+SRR062634_sorted_dedup_bqsr_reads	100.0

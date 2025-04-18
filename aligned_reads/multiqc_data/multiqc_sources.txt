@@ -1,0 +1,3 @@
+Module	Section	Sample Name	Source
+Picard	AlignmentSummaryMetrics	SRR062634_sorted_dedup_bqsr_reads	/gpfs/projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/alignment_metrics.txt
+Picard	InsertSizeMetrics	SRR062634_sorted_dedup_bqsr_reads	/gpfs/projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/insert_size_metrics.txt

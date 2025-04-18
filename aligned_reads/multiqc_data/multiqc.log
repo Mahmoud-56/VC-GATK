@@ -1,0 +1,3 @@
+[2025-04-18 08:37:11,373] multiqc.core.file_search                           [INFO   ]  Search path: /gpfs/projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads
+[2025-04-18 08:37:12,408] multiqc.modules.picard.picard                      [INFO   ]  Found 1 AlignmentSummaryMetrics reports
+[2025-04-18 08:37:12,415] multiqc.modules.picard.picard                      [INFO   ]  Found 1 InsertSizeMetrics reports

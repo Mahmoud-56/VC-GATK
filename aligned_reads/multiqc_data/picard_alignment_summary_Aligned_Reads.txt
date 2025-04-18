@@ -1,0 +1,2 @@
+Sample	Aligned Reads	Unaligned Reads
+SRR062634_sorted_dedup_bqsr_reads	24065819.0	83174.0

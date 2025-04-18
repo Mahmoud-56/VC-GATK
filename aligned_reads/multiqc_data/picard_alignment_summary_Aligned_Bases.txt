@@ -1,0 +1,2 @@
+Sample	Aligned Bases
+SRR062634_sorted_dedup_bqsr_reads	4736657328.0
