@@ -39,7 +39,7 @@ fi
 
 # ref dict - .dict file before running haplotype caller
 
-#gatk CreateSequenceDictionary R=/projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.fa O=/projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.dict
+gatk CreateSequenceDictionary R=/projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.fa O=/projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.dict
 ## VARIANT CALLING STEPS
 
 
@@ -58,8 +58,8 @@ data="/projects/bgmp/malm/bioinfo/VC-GATK/data"
 
 #echo "STEP 1: QC - Run fastqc"
 
-#fastqc ${reads}/SRR062634_1.filt.fastq.gz -o ${reads}/
-#fastqc ${reads}/SRR062634_2.filt.fastq.gz -o ${reads}/
+fastqc ${reads}/SRR062634_1.filt.fastq.gz -o ${reads}/
+fastqc ${reads}/SRR062634_2.filt.fastq.gz -o ${reads}/
 
 
 # not filtering required since the quality looks good. Checking for adapter content and low quality bases. Low quality bases were not going to be ommitted anyways since the aligned we are using uses soft clipping and we don not want to shorten the length of our reads which might result in incorrect mapping. 
@@ -73,11 +73,11 @@ data="/projects/bgmp/malm/bioinfo/VC-GATK/data"
 echo "STEP 2: Map to reference using BWA-MEM"
 
 # BWA index reference 
-#bwa index ${ref}
+bwa index ${ref}
 
 
 # BWA alignment (resulting SAM or BAM will be missing the read group section so we are providing it here)
-#bwa mem -t 4 -R "@RG\tID:SRR062634\tPL:ILLUMINA\tSM:SRR062634" ${ref} ${reads}/SRR062634_1.filt.fastq.gz ${reads}/SRR062634_2.filt.fastq.gz > ${aligned_reads}/SRR062634.paired.sam
+bwa mem -t 4 -R "@RG\tID:SRR062634\tPL:ILLUMINA\tSM:SRR062634" ${ref} ${reads}/SRR062634_1.filt.fastq.gz ${reads}/SRR062634_2.filt.fastq.gz > ${aligned_reads}/SRR062634.paired.sam
 
 
 
@@ -87,7 +87,7 @@ echo "STEP 2: Map to reference using BWA-MEM"
 
 echo "STEP 3: Mark Duplicates and Sort - GATK4"
 
-#gatk MarkDuplicatesSpark -I ${aligned_reads}/SRR062634.paired.sam -O ${aligned_reads}/SRR062634_sorted_dedup_reads.bam
+gatk MarkDuplicatesSpark -I ${aligned_reads}/SRR062634.paired.sam -O ${aligned_reads}/SRR062634_sorted_dedup_reads.bam
 
 
 
@@ -99,7 +99,7 @@ echo "STEP 3: Mark Duplicates and Sort - GATK4"
 echo "STEP 4: Base quality recalibration"
 
 # 1. build the model
-#gatk BaseRecalibrator -I ${aligned_reads}/SRR062634_sorted_dedup_reads.bam -R ${ref} --known-sites ${known_sites} -O ${data}/recal_data.table
+gatk BaseRecalibrator -I ${aligned_reads}/SRR062634_sorted_dedup_reads.bam -R ${ref} --known-sites ${known_sites} -O ${data}/recal_data.table
 
 
 # 2. Apply the model to adjust the base quality scores
@@ -114,13 +114,13 @@ gatk ApplyBQSR -I ${aligned_reads}/SRR062634_sorted_dedup_reads.bam -R ${ref} -b
 
 echo "STEP 5: Collect Alignment & Insert Size Metrics"
 
-#gatk CollectAlignmentSummaryMetrics -R /projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.fa -I /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/SRR062634_sorted_dedup_bqsr_reads.bam -O /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/alignment_metrics.txt
+gatk CollectAlignmentSummaryMetrics -R /projects/bgmp/malm/bioinfo/VC-GATK/ref/hg38.fa -I /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/SRR062634_sorted_dedup_bqsr_reads.bam -O /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/alignment_metrics.txt
 
 gatk CollectAlignmentSummaryMetrics -R ${ref} I=${aligned_reads}/SRR062634_sorted_dedup_bqsr_reads.bam -O ${aligned_reads}/alignment_metrics.txt
 
 gatk CollectInsertSizeMetrics --INPUT ${aligned_reads}/SRR062634_sorted_dedup_bqsr_reads.bam --OUTPUT ${aligned_reads}/insert_size_metrics.txt --Histogram_FILE=${aligned_reads}/insert_size_histogram.pdf
 
-#gatk CollectInsertSizeMetrics --INPUT /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/SRR062634_sorted_dedup_bqsr_reads.bam --OUTPUT /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/insert_size_metrics.txt --Histogram_FILE /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/insert_size_histogram.pdf
+gatk CollectInsertSizeMetrics --INPUT /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/SRR062634_sorted_dedup_bqsr_reads.bam --OUTPUT /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/insert_size_metrics.txt --Histogram_FILE /projects/bgmp/malm/bioinfo/VC-GATK/aligned_reads/insert_size_histogram.pdf
 
 # ----------------------------------------------
 # STEP 6: Call Variants - gatk haplotype caller
